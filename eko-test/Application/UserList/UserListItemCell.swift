@@ -9,6 +9,12 @@
 import Foundation
 import UIKit
 
+enum UserListItemCellState {
+    
+    case favourite
+    case notFavourite
+}
+
 class UserListItemCell: UITableViewCell {
     
     let avatarView = UIImageView()
@@ -19,11 +25,17 @@ class UserListItemCell: UITableViewCell {
     let favouriteButton = UIButton()
     
     var favouriteAction: (()->())?
+    var favouriteState: UserListItemCellState = UserListItemCellState.notFavourite
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupViews()
+        
+        userLoginLabel.text = "The butterworth filter symphony"
+        githubUrlLabel.text = "https://api.github.com/users/cheapRoc"
+        accountTypeLabel.text = "Account: Organization"
+        siteAdminStatusLabel.text = "Site Admin: True"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -44,7 +56,7 @@ class UserListItemCell: UITableViewCell {
         userLoginLabel.setupForAutolayout(in: contentView)
         userLoginLabel.alignLeadingToTrailing(of: avatarView, constant: 16)
         userLoginLabel.alignTopToTop(of: avatarView, constant: 0)
-      
+        
         // Favourite Button
         let favouriteImage = UIImage(named: "ic_favourite")?.withRenderingMode(.alwaysTemplate)
         favouriteButton.setupForAutolayout(in: contentView)
@@ -76,11 +88,10 @@ class UserListItemCell: UITableViewCell {
         siteAdminStatusLabel.topAnchor.constraint(equalTo: accountTypeLabel.bottomAnchor, constant: 8).isActive = true
         siteAdminStatusLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
         
-        userLoginLabel.text = "The butterworth filter symphony"
-        githubUrlLabel.text = "https://api.github.com/users/cheapRoc"
-        accountTypeLabel.text = "Organization"
-        siteAdminStatusLabel.text = "Site Admin Status: True"
-        
+        configureLabel(label: userLoginLabel, textStyle: .headline, color: .darkText)
+        configureLabel(label: githubUrlLabel, textStyle: .subheadline, color: .darkText)
+        configureLabel(label: accountTypeLabel, textStyle: .subheadline, color: .darkGray)
+        configureLabel(label: siteAdminStatusLabel, textStyle: .subheadline, color: .darkGray)
     }
     
     func updateFavouriteStatus(isFavourite: Bool) {
@@ -94,6 +105,14 @@ class UserListItemCell: UITableViewCell {
         
         favouriteAction?()
     }
+    
+    private func configureLabel(label: UILabel, textStyle: UIFont.TextStyle, color: UIColor) {
+        label.font = UIFont.preferredFont(forTextStyle: textStyle)
+        label.adjustsFontForContentSizeCategory = true
+        label.textColor = color
+        label.numberOfLines = 0
+    }
+    
 }
 
 /*
