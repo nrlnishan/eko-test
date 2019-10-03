@@ -14,6 +14,4 @@ class UserDetailsViewController: UIViewController {
         super.viewDidLoad()
 
     }
-    
-
 }

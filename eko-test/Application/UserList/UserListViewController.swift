@@ -8,10 +8,17 @@
 
 import UIKit
 
-class UserListViewController: UIViewController {
+class UserListViewController: UIViewController, UserListViewPresenterDelegate {
 
     let tableView = UITableView()
-    let moreIndicator = UIActivityIndicatorView(style: .gray)
+    
+    let loadingIndicatorView = UIActivityIndicatorView(style: .gray)
+    let messageLabel = UILabel()
+    
+    let prefetchIndicatorView = UIActivityIndicatorView(style: .gray)
+    let prefetchThreshold: CGFloat = 300
+    
+    var presenter: UserListViewPresenter?
     
     override func loadView() {
         
@@ -24,24 +31,112 @@ class UserListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        setupViews()
+        
+        presenter = UserListViewPresenter()
+        presenter?.delegate = self
+        
+        presenter?.fetchListOfGithubUsers()
+    }
+    
+    func setupViews() {
+        
+        messageLabel.setupForAutolayout(in: view)
+        messageLabel.alignCenterVertically(in: view)
+        messageLabel.alignLeadingToLeading(of: view, constant: 16)
+        messageLabel.alignTrailingToTrailing(of: view, constant: 16)
+        messageLabel.textAlignment = .center
+        messageLabel.numberOfLines = 0
+        messageLabel.adjustsFontForContentSizeCategory = true
+        messageLabel.font = UIFont.preferredFont(forTextStyle: .callout)
+        
+        loadingIndicatorView.setupForAutolayout(in: view)
+        loadingIndicatorView.alignCenterHorizontally(in: view)
+        loadingIndicatorView.alignBottomToTop(of: messageLabel, constant: 8)
+        
+        loadingIndicatorView.hidesWhenStopped = true
+        prefetchIndicatorView.hidesWhenStopped = true
+        
         tableView.setupForAutolayout(in: view)
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-        tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0).isActive = true
+        tableView.alignHorizontalEdges(to: view)
+        tableView.alignTopToTop(of: view, constant: 0)
+        tableView.alignBottomToBottom(of: view, constant: 0)
         
         tableView.estimatedRowHeight = 90
         tableView.rowHeight = UITableView.automaticDimension
-        
-        tableView.register(UserListItemCell.self, forCellReuseIdentifier: UserListItemCell.identifier)
-
         tableView.dataSource = self
         tableView.delegate = self
-
-        tableView.reloadData()
+        tableView.tableFooterView = prefetchIndicatorView
+        
+        tableView.register(UserListItemCell.self, forCellReuseIdentifier: UserListItemCell.identifier)
+    }
+    
+    func updateViewState(state: UserListViewState) {
+        
+        switch state {
+        case .empty:
+            
+            // Hide tableView & display message
+            messageLabel.isHidden = false
+            messageLabel.text = "No User Found"
+            
+            tableView.isHidden = true
+            
+        case .available:
+            
+            // Hide any loading indicator or messages
+            loadingIndicatorView.stopAnimating()
+            prefetchIndicatorView.stopAnimating()
+            messageLabel.isHidden = true
+            
+            // Refresh data
+            tableView.reloadData()
+        
+        case .error(let message):
+            
+            // Hide tableview & display error alert
+            tableView.isHidden = true
+            
+            displayErrorAlert(message: message)
+            
+        case .loading:
+            
+            // Hide tableView & display network request indicators
+            tableView.isHidden = true
+            
+            loadingIndicatorView.startAnimating()
+            messageLabel.text = "Fetching Users..."
+            
+        case .pagination:
+            
+            // Just show loading indicator at the bottom
+            prefetchIndicatorView.startAnimating()
+        }
+    }
+    
+    func updateFavouriteStatus(at indexPath: IndexPath) {
+        tableView.reloadRows(at: [indexPath], with: .none)
+    }
+    
+    func displayUserDetails(githubUrl: String) {
+        
+        let controller = UserDetailsViewController()
+        
+        self.navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    // MARK:- Private Helpers
+    
+    private func displayErrorAlert(message: String) {
+        
+        let alertController = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 
+// MARK:- TableView DataSource & Delegates
 extension UserListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -49,21 +144,32 @@ extension UserListViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return 16
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: UserListItemCell.identifier) as? UserListItemCell else {
-            
-            print("Returning Default")
-            return UITableViewCell()
-            
-        }
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: UserListItemCell.identifier) as? UserListItemCell else { return UITableViewCell() }
         
-        print("Returning Cell")
+        cell.favouriteAction = { [weak self] in
+            self?.updateFavouriteStatus(at: indexPath)
+        }
         
         return cell
     }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let currentScrollDistance = scrollView.contentOffset.y
+        let maxScrollableDistance = scrollView.contentSize.height - scrollView.frame.size.height
+        
+        let remainingScrollDistance = maxScrollableDistance - currentScrollDistance
+        
+        // Start prefetching if remaining distance is less than the threshold
+        guard remainingScrollDistance <= prefetchThreshold else { return }
+        
+        presenter?.prefetchListOfGithubUsers()
+    }
 }
+
 

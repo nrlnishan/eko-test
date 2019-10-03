@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct GithubUser {
+struct GithubUser: Codable {
     
     var login: String?
     var id: Int?
@@ -28,4 +28,3 @@ struct GithubUser {
     var type: String?
     var siteAdmin: Bool?
 }
-

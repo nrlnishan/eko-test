@@ -85,8 +85,8 @@ class UserListItemCell: UITableViewCell {
         siteAdminStatusLabel.alignHorizontalEdges(to: userLoginLabel)
         siteAdminStatusLabel.alignTopToBottom(of: accountTypeLabel, constant: 8)
         
-        siteAdminStatusLabel.topAnchor.constraint(equalTo: accountTypeLabel.bottomAnchor, constant: 8).isActive = true
-        siteAdminStatusLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16).isActive = true
+        siteAdminStatusLabel.alignTopToBottom(of: accountTypeLabel, constant: 8)
+        siteAdminStatusLabel.alignBottomToBottom(of: contentView, constant: 16)
         
         configureLabel(label: userLoginLabel, textStyle: .headline, color: .darkText)
         configureLabel(label: githubUrlLabel, textStyle: .subheadline, color: .darkText)
@@ -112,29 +112,4 @@ class UserListItemCell: UITableViewCell {
         label.textColor = color
         label.numberOfLines = 0
     }
-    
 }
-
-/*
-
-Example JSON response from gitbub.com
-    {
-        "login": "cheapRoc",
-        "id": 140,
-        "avatar_url": "https://avatars2.githubusercontent.com/u/140?v=4",
-        "gravatar_id": "",
-        "url": "https://api.github.com/users/cheapRoc",
-        "html_url": "https://github.com/cheapRoc",
-        "followers_url": "https://api.github.com/users/cheapRoc/followers",
-        "following_url": "https://api.github.com/users/cheapRoc/following{/other_user}",
-        "gists_url": "https://api.github.com/users/cheapRoc/gists{/gist_id}",
-        "starred_url": "https://api.github.com/users/cheapRoc/starred{/owner}{/repo}",
-        "subscriptions_url": "https://api.github.com/users/cheapRoc/subscriptions",
-        "organizations_url": "https://api.github.com/users/cheapRoc/orgs",
-        "repos_url": "https://api.github.com/users/cheapRoc/repos",
-        "events_url": "https://api.github.com/users/cheapRoc/events{/privacy}",
-        "received_events_url": "https://api.github.com/users/cheapRoc/received_events",
-        "type": "User",
-        "site_admin": false
-}
-*/

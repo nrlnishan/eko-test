@@ -28,7 +28,7 @@ extension UIView {
     
     // MARK:- Autolayout Extensions
     //
-    // Extensions to ease autolayout based setup when using LayoutAnchor
+    // Simple Extensions to ease autolayout based setup when using LayoutAnchor
     
     func setupForAutolayout(in view: UIView) {
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -75,6 +75,19 @@ extension UIView {
     
     func alignBottomToBottom(of view: UIView, constant: CGFloat) {
         self.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -constant).isActive = true
+    }
+    
+    func alignBottomToTop(of view: UIView, constant: CGFloat) {
+        self.bottomAnchor.constraint(equalTo: view.topAnchor, constant: -constant).isActive = true
+    }
+    
+    // Center
+    func alignCenterVertically(in view: UIView) {
+        self.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+    }
+    
+    func alignCenterHorizontally(in view: UIView) {
+        self.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
 }
