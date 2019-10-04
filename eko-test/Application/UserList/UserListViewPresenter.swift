@@ -34,15 +34,24 @@ protocol UserListViewPresenterDelegate: class {
 
 class UserListViewPresenter {
     
-    weak var delegate: UserListViewPresenterDelegate?
+    let defaultErrMessage = "We encountered an error while fetching Users. Try again later"
     
-    var areMoreItemsAvailable = true
+    weak var delegate: UserListViewPresenterDelegate?
+    var userListService: UserFetchService
+    
     var state = UserListViewState.loading
+    var userList = [GithubUserViewModel]()
+    
+    init(service: UserFetchService) {
+        self.userListService = service
+    }
     
     func fetchListOfGithubUsers() {
         
         self.state = .loading
         self.delegate?.updateViewState(state: self.state)
+        
+        self.userListService.fetchListOfUsers(shouldPaginate: false)
     }
     
     func prefetchListOfGithubUsers() {
@@ -53,7 +62,8 @@ class UserListViewPresenter {
         self.state = .pagination
         self.delegate?.updateViewState(state: state)
         
-        print("Prefetching Github user list")
+        // Actual fetching of users
+        self.userListService.fetchListOfUsers(shouldPaginate: true)
     }
     
     func toggleUserFavouriteStatus(at indexPath: IndexPath) {
@@ -61,11 +71,11 @@ class UserListViewPresenter {
         self.delegate?.updateFavouriteStatus(at: indexPath)
     }
     
-    
     private func isPrefetchingAvailable() -> Bool {
         
         switch state {
-        case .available where areMoreItemsAvailable:
+            
+        case .available:
             return true
         default:
             return false

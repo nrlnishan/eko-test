@@ -33,13 +33,12 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
         
         setupViews()
         
-        presenter = UserListViewPresenter()
-        presenter?.delegate = self
-        
         presenter?.fetchListOfGithubUsers()
     }
     
     func setupViews() {
+        
+        self.title = "Github Users"
         
         messageLabel.setupForAutolayout(in: view)
         messageLabel.alignCenterVertically(in: view)
@@ -49,6 +48,7 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
         messageLabel.numberOfLines = 0
         messageLabel.adjustsFontForContentSizeCategory = true
         messageLabel.font = UIFont.preferredFont(forTextStyle: .callout)
+        messageLabel.textColor = UIColor.darkText
         
         loadingIndicatorView.setupForAutolayout(in: view)
         loadingIndicatorView.alignCenterHorizontally(in: view)
@@ -64,8 +64,6 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
         
         tableView.estimatedRowHeight = 90
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.dataSource = self
-        tableView.delegate = self
         tableView.tableFooterView = prefetchIndicatorView
         
         tableView.register(UserListItemCell.self, forCellReuseIdentifier: UserListItemCell.identifier)
@@ -90,6 +88,8 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
             messageLabel.isHidden = true
             
             // Refresh data
+            tableView.dataSource = self
+            tableView.delegate = self
             tableView.reloadData()
         
         case .error(let message):
@@ -144,7 +144,7 @@ extension UserListViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 16
+        return presenter?.userList.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

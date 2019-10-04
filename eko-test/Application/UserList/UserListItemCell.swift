@@ -32,7 +32,7 @@ class UserListItemCell: UITableViewCell {
         
         setupViews()
         
-        userLoginLabel.text = "The butterworth filter symphony"
+        userLoginLabel.text = "The butterworth filter symp"
         githubUrlLabel.text = "https://api.github.com/users/cheapRoc"
         accountTypeLabel.text = "Account: Organization"
         siteAdminStatusLabel.text = "Site Admin: True"
