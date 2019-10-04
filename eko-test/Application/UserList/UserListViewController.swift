@@ -74,8 +74,6 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
         switch state {
         case .empty:
             
-            print("EMpty State")
-            
             // Hide tableView & display message
             messageLabel.isHidden = false
             messageLabel.text = "No User Found"
@@ -83,8 +81,6 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
             tableView.isHidden = true
             
         case .available:
-            
-            print("Available State")
             
             // Hide any loading indicator or messages
             loadingIndicatorView.stopAnimating()
@@ -99,16 +95,12 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
         
         case .error(let message):
             
-            print("Error State")
-            
             // Hide tableview & display error alert
             tableView.isHidden = true
             
             displayErrorAlert(message: message)
             
         case .loading:
-            
-            print("Loading State")
             
             // Hide tableView & display network request indicators
             tableView.isHidden = true
@@ -117,8 +109,6 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
             messageLabel.text = "Fetching Users..."
             
         case .pagination:
-            
-            print("Pagination State")
             
             // Just show loading indicator at the bottom
             prefetchIndicatorView.startAnimating()

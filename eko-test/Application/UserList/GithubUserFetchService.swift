@@ -20,7 +20,7 @@ protocol UserFetchService {
 class GithubUserFetchService: UserFetchService {
     
     var paginationUrl: String?
-    var isPaginationAvailable = false
+    var isPaginationAvailable = true
     var completionHandler: (([GithubUser]?, AppError?)->())?
     
     func fetchListOfUsers(shouldPaginate: Bool) {
@@ -60,6 +60,9 @@ class GithubUserFetchService: UserFetchService {
             let linkHeader = httpResponse.allHeaderFields["Link"] as? String ?? ""
             self.processPaginationLink(linkHeader: linkHeader)
             
+            Log.add(info: "Pagination Availability: \(self.isPaginationAvailable)")
+            Log.add(info: "Pagination Url: \(self.paginationUrl)")
+            
             // Handle success response
             self.completionHandler?(users, nil)
             
@@ -70,6 +73,8 @@ class GithubUserFetchService: UserFetchService {
     ///
     /// Link header string example: <https://api.github.com/users?since=46>; rel="next", <https://api.github.com/users{?since}>; rel="first"
     func processPaginationLink(linkHeader: String) {
+        
+        Log.add(info: "Link Header: \(linkHeader)")
         
         let links = linkHeader.components(separatedBy: ",")
         
@@ -84,7 +89,7 @@ class GithubUserFetchService: UserFetchService {
             if lastComponent == paginationKey {
                 self.paginationUrl = firstComponent.trimmingCharacters(in: CharacterSet(charactersIn: "<>"))
                 self.isPaginationAvailable = true
-                break
+                return
             }
         }
         

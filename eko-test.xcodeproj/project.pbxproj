@@ -13,6 +13,7 @@
 		1A8728F32343B0920090B824 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A8728F22343B0920090B824 /* Assets.xcassets */; };
 		1A8728F62343B0920090B824 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1A8728F42343B0920090B824 /* LaunchScreen.storyboard */; };
 		1A94B81B2347B14400A4DAEE /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A94B81A2347B14400A4DAEE /* AppError.swift */; };
+		1A94B81D2347CB1100A4DAEE /* Log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A94B81C2347CB1100A4DAEE /* Log.swift */; };
 		1A99A09A2344EE86002D5DA1 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A99A0992344EE86002D5DA1 /* Extensions.swift */; };
 		1A99A0A22344F3CC002D5DA1 /* GithubUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A99A0A12344F3CC002D5DA1 /* GithubUser.swift */; };
 		1A99A0A42344F599002D5DA1 /* UserListItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A99A0A32344F599002D5DA1 /* UserListItemCell.swift */; };
@@ -32,6 +33,7 @@
 		1A8728F52343B0920090B824 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1A8728F72343B0920090B824 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1A94B81A2347B14400A4DAEE /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		1A94B81C2347CB1100A4DAEE /* Log.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Log.swift; sourceTree = "<group>"; };
 		1A99A0992344EE86002D5DA1 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		1A99A0A12344F3CC002D5DA1 /* GithubUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubUser.swift; sourceTree = "<group>"; };
 		1A99A0A32344F599002D5DA1 /* UserListItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListItemCell.swift; sourceTree = "<group>"; };
@@ -88,6 +90,7 @@
 			isa = PBXGroup;
 			children = (
 				1A94B81A2347B14400A4DAEE /* AppError.swift */,
+				1A94B81C2347CB1100A4DAEE /* Log.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -298,6 +301,7 @@
 			files = (
 				1A8728EE2343B0910090B824 /* UserListViewController.swift in Sources */,
 				1A99A0A42344F599002D5DA1 /* UserListItemCell.swift in Sources */,
+				1A94B81D2347CB1100A4DAEE /* Log.swift in Sources */,
 				1A94B81B2347B14400A4DAEE /* AppError.swift in Sources */,
 				1A99A0A62344F8B0002D5DA1 /* UserDetailsViewController.swift in Sources */,
 				1A99A0A22344F3CC002D5DA1 /* GithubUser.swift in Sources */,

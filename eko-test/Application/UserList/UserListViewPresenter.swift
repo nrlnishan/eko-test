@@ -37,7 +37,7 @@ class UserListViewPresenter {
     weak var delegate: UserListViewPresenterDelegate?
     var userListApiService: UserFetchService
     
-    var state = UserListViewState.loading
+    var state = UserListViewState.empty
     var userList = [GithubUser]()
     
     init(apiService: UserFetchService) {
@@ -59,6 +59,8 @@ class UserListViewPresenter {
         
         // Check before fetching next page
         guard isPrefetchingAvailable() else { return }
+        
+        Log.add(info: "Prefetching next page...")
         
         // Update State
         self.state = .pagination
@@ -95,10 +97,12 @@ class UserListViewPresenter {
         switch error {
             
         case UserFetchError.paginationUnavailable:
-            self.delegate?.updateViewState(state: .available)
+            self.state = .available
+            self.delegate?.updateViewState(state: state)
             
         default:
-            self.delegate?.updateViewState(state: .error(message: defaultErrMessage))
+            self.state = .error(message: defaultErrMessage)
+            self.delegate?.updateViewState(state: state)
         }
     }
     
@@ -109,9 +113,11 @@ class UserListViewPresenter {
         
         // Update State
         if userList.isEmpty {
-            self.delegate?.updateViewState(state: .empty)
+            self.state = .empty
+            self.delegate?.updateViewState(state: state)
         } else {
-            self.delegate?.updateViewState(state: .available)
+            self.state = .available
+            self.delegate?.updateViewState(state: state)
         }
     }
     
