@@ -31,11 +31,6 @@ class UserListItemCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setupViews()
-        
-        userLoginLabel.text = "The butterworth filter symp"
-        githubUrlLabel.text = "https://api.github.com/users/cheapRoc"
-        accountTypeLabel.text = "Account: Organization"
-        siteAdminStatusLabel.text = "Site Admin: True"
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -94,15 +89,25 @@ class UserListItemCell: UITableViewCell {
         configureLabel(label: siteAdminStatusLabel, textStyle: .subheadline, color: .darkGray)
     }
     
+    func setupViewInformation(info: UserListItemCellModel?) {
+        
+        guard let info = info else { return }
+        
+        userLoginLabel.text = info.loginLabelDesc
+        githubUrlLabel.text = info.githubUrl
+        accountTypeLabel.text = info.accountTypeDesc
+        siteAdminStatusLabel.text = info.siteAdminStatus
+        avatarView.setImage(url: info.avatarUrl)
+        
+        favouriteButton.tintColor = info.isFavourite ? UIColor.darkGray : UIColor.groupTableViewBackground
+    }
+    
     func updateFavouriteStatus(isFavourite: Bool) {
         favouriteButton.tintColor = isFavourite ? UIColor.darkGray : UIColor.groupTableViewBackground
     }
     
     // Button Action
     @objc func onFavouriteButtonTap() {
-        
-        print("Favourite Button Tap")
-        
         favouriteAction?()
     }
     

@@ -74,6 +74,8 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
         switch state {
         case .empty:
             
+            print("EMpty State")
+            
             // Hide tableView & display message
             messageLabel.isHidden = false
             messageLabel.text = "No User Found"
@@ -82,17 +84,22 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
             
         case .available:
             
+            print("Available State")
+            
             // Hide any loading indicator or messages
             loadingIndicatorView.stopAnimating()
             prefetchIndicatorView.stopAnimating()
             messageLabel.isHidden = true
             
             // Refresh data
+            tableView.isHidden = false
             tableView.dataSource = self
             tableView.delegate = self
             tableView.reloadData()
         
         case .error(let message):
+            
+            print("Error State")
             
             // Hide tableview & display error alert
             tableView.isHidden = true
@@ -101,6 +108,8 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
             
         case .loading:
             
+            print("Loading State")
+            
             // Hide tableView & display network request indicators
             tableView.isHidden = true
             
@@ -108,6 +117,8 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
             messageLabel.text = "Fetching Users..."
             
         case .pagination:
+            
+            print("Pagination State")
             
             // Just show loading indicator at the bottom
             prefetchIndicatorView.startAnimating()
@@ -139,10 +150,6 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
 // MARK:- TableView DataSource & Delegates
 extension UserListViewController: UITableViewDataSource, UITableViewDelegate {
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return presenter?.userList.count ?? 0
     }
@@ -151,8 +158,11 @@ extension UserListViewController: UITableViewDataSource, UITableViewDelegate {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: UserListItemCell.identifier) as? UserListItemCell else { return UITableViewCell() }
         
+        let viewModel = presenter?.getUserInformation(at: indexPath)
+        cell.setupViewInformation(info: viewModel)
+        
         cell.favouriteAction = { [weak self] in
-            self?.updateFavouriteStatus(at: indexPath)
+            self?.presenter?.toggleUserFavouriteStatus(at: indexPath)
         }
         
         return cell

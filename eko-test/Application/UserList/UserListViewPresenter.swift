@@ -34,36 +34,104 @@ protocol UserListViewPresenterDelegate: class {
 
 class UserListViewPresenter {
     
-    let defaultErrMessage = "We encountered an error while fetching Users. Try again later"
-    
     weak var delegate: UserListViewPresenterDelegate?
-    var userListService: UserFetchService
+    var userListApiService: UserFetchService
     
     var state = UserListViewState.loading
-    var userList = [GithubUserViewModel]()
+    var userList = [GithubUser]()
     
-    init(service: UserFetchService) {
-        self.userListService = service
+    init(apiService: UserFetchService) {
+        self.userListApiService = apiService
+        self.setupUserFetchingCompletionHandler()
     }
     
     func fetchListOfGithubUsers() {
         
+        // Update State
         self.state = .loading
         self.delegate?.updateViewState(state: self.state)
         
-        self.userListService.fetchListOfUsers(shouldPaginate: false)
+        // Fetch Users
+        self.userListApiService.fetchListOfUsers(shouldPaginate: false)
     }
     
     func prefetchListOfGithubUsers() {
         
+        // Check before fetching next page
         guard isPrefetchingAvailable() else { return }
         
-        // Update state to partial loading
+        // Update State
         self.state = .pagination
         self.delegate?.updateViewState(state: state)
         
-        // Actual fetching of users
-        self.userListService.fetchListOfUsers(shouldPaginate: true)
+        // Fetch Users
+        self.userListApiService.fetchListOfUsers(shouldPaginate: true)
+    }
+    
+    func setupUserFetchingCompletionHandler() {
+        
+        self.userListApiService.completionHandler = { [weak self] users, error in
+            
+            DispatchQueue.main.async {
+                
+                if let err = error {
+                    self?.handleUserFetchError(error: err)
+                }
+                
+                if let userList = users {
+                    self?.handleUserFetchSuccess(users: userList)
+                }
+            }
+        }
+    }
+    
+    func handleUserFetchError(error: AppError) {
+        
+        // If pagination is not available, just hide the loading indicator at the bottom
+        // else just show error message alert.
+        
+        let defaultErrMessage = "We encountered an error while fetching Users. Try again later"
+        
+        switch error {
+            
+        case UserFetchError.paginationUnavailable:
+            self.delegate?.updateViewState(state: .available)
+            
+        default:
+            self.delegate?.updateViewState(state: .error(message: defaultErrMessage))
+        }
+    }
+    
+    func handleUserFetchSuccess(users: [GithubUser]) {
+        
+        // Update user list
+        userList.append(contentsOf: users)
+        
+        // Update State
+        if userList.isEmpty {
+            self.delegate?.updateViewState(state: .empty)
+        } else {
+            self.delegate?.updateViewState(state: .available)
+        }
+    }
+    
+    func getUserInformation(at indexPath: IndexPath) -> UserListItemCellModel {
+        
+        let userInfo = userList[indexPath.row]
+        
+        let viewModel = UserListItemCellModel(model: userInfo)
+        return viewModel
+    }
+    
+    func isPrefetchingAvailable() -> Bool {
+        
+        switch state {
+            
+        case .available where userListApiService.isPaginationAvailable:
+            return true
+        default:
+            return false
+        }
     }
     
     func toggleUserFavouriteStatus(at indexPath: IndexPath) {
@@ -71,14 +139,4 @@ class UserListViewPresenter {
         self.delegate?.updateFavouriteStatus(at: indexPath)
     }
     
-    private func isPrefetchingAvailable() -> Bool {
-        
-        switch state {
-            
-        case .available:
-            return true
-        default:
-            return false
-        }
-    }
 }

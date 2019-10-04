@@ -30,7 +30,7 @@ class GithubUserFetchService: UserFetchService {
         
         guard let urlEndpoint = apiEndpoint, let url = URL(string: urlEndpoint) else {
             
-            self.handleApiResponse(users: nil, error: UserFetchError.paginationUnavailable)
+            self.completionHandler?(nil, UserFetchError.paginationUnavailable)
             return
         }
         
@@ -38,12 +38,12 @@ class GithubUserFetchService: UserFetchService {
         URLSession.shared.dataTask(with: url) { (data, response, error) in
             
             if let err = error {
-                self.handleApiResponse(users: nil, error: ApiError.custom(message: err.localizedDescription))
+                self.completionHandler?(nil, ApiError.custom(message: err.localizedDescription))
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse, let responseData = data else {
-                self.handleApiResponse(users: nil, error: ApiError.unknown)
+                self.completionHandler?(nil, ApiError.unknown)
                 return
             }
             
@@ -52,7 +52,7 @@ class GithubUserFetchService: UserFetchService {
             decoder.keyDecodingStrategy = .convertFromSnakeCase
         
             guard let users = try? decoder.decode([GithubUser].self, from: responseData) else {
-                self.handleApiResponse(users: nil, error: ApiError.serialization)
+                self.completionHandler?(nil, ApiError.serialization)
                 return
             }
             
@@ -61,16 +61,9 @@ class GithubUserFetchService: UserFetchService {
             self.processPaginationLink(linkHeader: linkHeader)
             
             // Handle success response
-            self.handleApiResponse(users: users, error: nil)
+            self.completionHandler?(users, nil)
             
         }.resume()
-    }
-    
-    // Helper method to execute completion handler in Main queue
-    func handleApiResponse(users: [GithubUser]?, error: AppError?) {
-        DispatchQueue.main.async {
-            self.completionHandler?(users, error)
-        }
     }
     
     /// Extracts the url for next page from the Link HTTP Header
