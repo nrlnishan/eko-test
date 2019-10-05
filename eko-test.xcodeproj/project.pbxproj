@@ -134,7 +134,6 @@
 		1A8728EA2343B0910090B824 /* eko-test */ = {
 			isa = PBXGroup;
 			children = (
-				1A99A0A02344EFA5002D5DA1 /* Extensions */,
 				1A99A09B2344EF4D002D5DA1 /* Application */,
 				1A99A0982344EE6F002D5DA1 /* Support FIles */,
 			);
@@ -163,6 +162,7 @@
 		1A99A09B2344EF4D002D5DA1 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				1A99A0A02344EFA5002D5DA1 /* Extensions */,
 				1A94B8192347B13700A4DAEE /* Utilities */,
 				1A99A09F2344EF81002D5DA1 /* Storyboards */,
 				1A99A09E2344EF7B002D5DA1 /* Main */,
