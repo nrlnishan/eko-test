@@ -18,7 +18,7 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
     let prefetchIndicatorView = UIActivityIndicatorView(style: .gray)
     let prefetchThreshold: CGFloat = 300
     
-    var presenter: UserListViewPresenter?
+    var presenter: UserListViewPresentation?
     
     override func loadView() {
         

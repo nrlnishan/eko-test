@@ -11,7 +11,7 @@ import Foundation
 // Class to print simple log on console
 class Log {
     
-    static var isEnabled = true
+    static var isEnabled = false
     
     class func add(info: Any?, method:String = #function) {
         if isEnabled {

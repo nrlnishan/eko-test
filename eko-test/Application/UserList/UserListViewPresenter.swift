@@ -34,7 +34,20 @@ protocol UserListViewPresenterDelegate: class {
     func displayUserGithubDetail(githubUrl: String?)
 }
 
-class UserListViewPresenter {
+protocol UserListViewPresentation {
+    
+    var delegate: UserListViewPresenterDelegate? { get set }
+    var state: UserListViewState { get set }
+    var userList: [GithubUser] { get set }
+    
+    func fetchListOfGithubUsers()
+    func prefetchListOfGithubUsers()
+    func getUserInformation(at indexPath: IndexPath) -> UserListItemCellModel
+    func toggleUserFavouriteStatus(currentStatus: Bool, indexPath: IndexPath)
+    func displayGithubProfileOfUser(at indexPath: IndexPath)
+}
+
+class UserListViewPresenter: UserListViewPresentation {
     
     weak var delegate: UserListViewPresenterDelegate?
     
