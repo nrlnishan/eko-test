@@ -30,6 +30,8 @@ protocol UserListViewPresenterDelegate: class {
     
     func updateViewState(state: UserListViewState)
     func updateFavouriteStatus(at indexPath: IndexPath)
+    
+    func displayUserGithubDetail(githubUrl: String?)
 }
 
 class UserListViewPresenter {
@@ -129,6 +131,14 @@ class UserListViewPresenter {
         return viewModel
     }
     
+    func displayUserInformation(at indexPath: IndexPath) {
+        
+        let userInfo = userList[indexPath.row]
+        let githubUrl = userInfo.htmlUrl
+        
+        self.delegate?.displayUserGithubDetail(githubUrl: githubUrl)
+    }
+    
     func isPrefetchingAvailable() -> Bool {
         
         switch state {
@@ -144,5 +154,4 @@ class UserListViewPresenter {
         
         self.delegate?.updateFavouriteStatus(at: indexPath)
     }
-    
 }

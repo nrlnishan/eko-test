@@ -38,7 +38,7 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
     
     func setupViews() {
         
-        self.title = "Github Users"
+        self.title = "Users"
         
         messageLabel.setupForAutolayout(in: view)
         messageLabel.alignCenterVertically(in: view)
@@ -119,9 +119,10 @@ class UserListViewController: UIViewController, UserListViewPresenterDelegate {
         tableView.reloadRows(at: [indexPath], with: .none)
     }
     
-    func displayUserDetails(githubUrl: String) {
+    func displayUserGithubDetail(githubUrl: String?) {
         
         let controller = UserDetailsViewController()
+        controller.githubUrl = githubUrl
         
         self.navigationController?.pushViewController(controller, animated: true)
     }
@@ -156,6 +157,11 @@ extension UserListViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        presenter?.displayUserInformation(at: indexPath)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

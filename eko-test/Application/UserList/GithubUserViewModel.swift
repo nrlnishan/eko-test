@@ -22,7 +22,7 @@ struct UserListItemCellModel {
         
         loginLabelDesc = model.login ?? "-"
         avatarUrl = model.avatarUrl ?? ""
-        githubUrl = model.url ?? "Github Not Available"
+        githubUrl = model.htmlUrl ?? "Github Not Available"
         
         let accountType = model.type ?? "-"
         accountTypeDesc = "Account: " + accountType
