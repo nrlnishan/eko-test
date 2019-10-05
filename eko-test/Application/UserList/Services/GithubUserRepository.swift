@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol UserFetchService {
+protocol GithubUserRepository {
     
     func fetchListOfUsers(shouldPaginate: Bool)
     
@@ -17,7 +17,7 @@ protocol UserFetchService {
     var completionHandler: (([GithubUser]?, AppError?)->())? { get set }
 }
 
-class GithubUserFetchService: UserFetchService {
+class GithubUserFetchService: GithubUserRepository {
     
     var paginationUrl: String?
     var isPaginationAvailable = true
@@ -96,37 +96,5 @@ class GithubUserFetchService: UserFetchService {
         // If url for next pagination is not found
         self.paginationUrl = nil
         self.isPaginationAvailable = false
-    }
-}
-
-
-class FavouriteUserStorageService {
-    
-    var storageKey = "favourite_user_list"
-    var storage: UserDefaults
-    
-    init() {
-        storage = UserDefaults.standard
-    }
-    
-    func setFavouriteStatus(user: GithubUser, status: Bool) {
-        
-        guard let id = user.id else { return }
-        
-        var favDict = storage.dictionary(forKey: storageKey) ?? [:]
-        favDict["\(id)"] = status
-        
-        storage.set(favDict, forKey: storageKey)
-        storage.synchronize()
-    }
-    
-    func getFavouriteStatus(user: GithubUser) -> Bool {
-        
-        guard let id = user.id else { return false }
-        
-        let savedDict = storage.dictionary(forKey: storageKey) ?? [:]
-        let isFavourite = savedDict["\(id)"] as? Bool ?? false
-        
-        return isFavourite
     }
 }

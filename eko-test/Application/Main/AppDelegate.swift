@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let userListController = UserListViewController()
         
-        let presenter = UserListViewPresenter(apiService: GithubUserFetchService())
+        let presenter = UserListViewPresenter(userRepository: GithubUserFetchService(), favouriteRepository: FavouriteUserService())
         presenter.delegate = userListController
         
         userListController.presenter = presenter

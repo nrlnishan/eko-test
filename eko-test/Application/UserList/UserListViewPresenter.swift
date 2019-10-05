@@ -37,15 +37,16 @@ protocol UserListViewPresenterDelegate: class {
 class UserListViewPresenter {
     
     weak var delegate: UserListViewPresenterDelegate?
-    var userListApiService: UserFetchService
+    
+    var userService: GithubUserRepository
+    var favouriteService: FavouriteUserRepository
     
     var state = UserListViewState.empty
     var userList = [GithubUser]()
     
-    var favouriteService = FavouriteUserStorageService()
-    
-    init(apiService: UserFetchService) {
-        self.userListApiService = apiService
+    init(userRepository: GithubUserRepository, favouriteRepository: FavouriteUserRepository) {
+        self.userService = userRepository
+        self.favouriteService = favouriteRepository
         self.setupUserFetchingCompletionHandler()
     }
     
@@ -56,7 +57,7 @@ class UserListViewPresenter {
         self.delegate?.updateViewState(state: self.state)
         
         // Fetch Users
-        self.userListApiService.fetchListOfUsers(shouldPaginate: false)
+        self.userService.fetchListOfUsers(shouldPaginate: false)
     }
     
     func prefetchListOfGithubUsers() {
@@ -71,12 +72,12 @@ class UserListViewPresenter {
         self.delegate?.updateViewState(state: state)
         
         // Fetch Users
-        self.userListApiService.fetchListOfUsers(shouldPaginate: true)
+        self.userService.fetchListOfUsers(shouldPaginate: true)
     }
     
     func setupUserFetchingCompletionHandler() {
         
-        self.userListApiService.completionHandler = { [weak self] users, error in
+        self.userService.completionHandler = { [weak self] users, error in
             
             DispatchQueue.main.async {
                 
@@ -158,7 +159,7 @@ class UserListViewPresenter {
         
         switch state {
             
-        case .available where userListApiService.isPaginationAvailable:
+        case .available where userService.isPaginationAvailable:
             return true
         default:
             return false
