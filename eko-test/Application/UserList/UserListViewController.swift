@@ -152,8 +152,8 @@ extension UserListViewController: UITableViewDataSource, UITableViewDelegate {
         let viewModel = presenter?.getUserInformation(at: indexPath)
         cell.setupViewInformation(info: viewModel)
         
-        cell.favouriteAction = { [weak self] in
-            self?.presenter?.toggleUserFavouriteStatus(at: indexPath)
+        cell.favouriteAction = { [weak self] isFavourite in
+            self?.presenter?.toggleUserFavouriteStatus(currentStatus: isFavourite, indexPath: indexPath)
         }
         
         return cell
@@ -161,7 +161,7 @@ extension UserListViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        presenter?.displayUserInformation(at: indexPath)
+        presenter?.displayGithubProfileOfUser(at: indexPath)
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

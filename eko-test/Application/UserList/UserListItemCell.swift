@@ -24,8 +24,9 @@ class UserListItemCell: UITableViewCell {
     let siteAdminStatusLabel = UILabel()
     let favouriteButton = UIButton()
     
-    var favouriteAction: (()->())?
+    var favouriteAction: ((Bool)->())?
     var favouriteState: UserListItemCellState = UserListItemCellState.notFavourite
+    var viewModel: UserListItemCellModel?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -93,6 +94,8 @@ class UserListItemCell: UITableViewCell {
         
         guard let info = info else { return }
         
+        viewModel = info
+        
         userLoginLabel.text = info.loginLabelDesc
         githubUrlLabel.text = info.githubUrl
         accountTypeLabel.text = info.accountTypeDesc
@@ -102,13 +105,11 @@ class UserListItemCell: UITableViewCell {
         favouriteButton.tintColor = info.isFavourite ? UIColor.darkGray : UIColor.groupTableViewBackground
     }
     
-    func updateFavouriteStatus(isFavourite: Bool) {
-        favouriteButton.tintColor = isFavourite ? UIColor.darkGray : UIColor.groupTableViewBackground
-    }
-    
     // Button Action
     @objc func onFavouriteButtonTap() {
-        favouriteAction?()
+        
+        let isFavourite = viewModel?.isFavourite ?? false
+        favouriteAction?(isFavourite)
     }
     
     private func configureLabel(label: UILabel, textStyle: UIFont.TextStyle, color: UIColor) {

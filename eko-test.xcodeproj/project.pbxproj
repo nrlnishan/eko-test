@@ -20,7 +20,7 @@
 		1A99A0A62344F8B0002D5DA1 /* UserDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A99A0A52344F8B0002D5DA1 /* UserDetailsViewController.swift */; };
 		1A99A0A82344F941002D5DA1 /* UserListViewPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A99A0A72344F941002D5DA1 /* UserListViewPresenter.swift */; };
 		1A99A0AA2344FAB6002D5DA1 /* GithubUserFetchService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A99A0A92344FAB6002D5DA1 /* GithubUserFetchService.swift */; };
-		1AD1060E23477E950058B096 /* GithubUserViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD1060D23477E950058B096 /* GithubUserViewModel.swift */; };
+		1AD1060E23477E950058B096 /* UserListItemCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AD1060D23477E950058B096 /* UserListItemCellModel.swift */; };
 		A0A6110811BD7929666AF3D2 /* Pods_eko_test.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4088EA39B44B5A43AF948D65 /* Pods_eko_test.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,7 +40,7 @@
 		1A99A0A52344F8B0002D5DA1 /* UserDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailsViewController.swift; sourceTree = "<group>"; };
 		1A99A0A72344F941002D5DA1 /* UserListViewPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListViewPresenter.swift; sourceTree = "<group>"; };
 		1A99A0A92344FAB6002D5DA1 /* GithubUserFetchService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubUserFetchService.swift; sourceTree = "<group>"; };
-		1AD1060D23477E950058B096 /* GithubUserViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubUserViewModel.swift; sourceTree = "<group>"; };
+		1AD1060D23477E950058B096 /* UserListItemCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListItemCellModel.swift; sourceTree = "<group>"; };
 		4088EA39B44B5A43AF948D65 /* Pods_eko_test.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_eko_test.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C2AC6C1309B2024388CAAE4 /* Pods-eko-test.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-eko-test.debug.xcconfig"; path = "Target Support Files/Pods-eko-test/Pods-eko-test.debug.xcconfig"; sourceTree = "<group>"; };
 		794748BF70CCAA6A75DB7A44 /* Pods-eko-test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-eko-test.release.xcconfig"; path = "Target Support Files/Pods-eko-test/Pods-eko-test.release.xcconfig"; sourceTree = "<group>"; };
@@ -58,6 +58,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A7DF4332348534F007BF231 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1A99A0A12344F3CC002D5DA1 /* GithubUser.swift */,
+				1AD1060D23477E950058B096 /* UserListItemCellModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1A7DF43423485357007BF231 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1A99A0A92344FAB6002D5DA1 /* GithubUserFetchService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		1A8728DF2343B0910090B824 = {
 			isa = PBXGroup;
 			children = (
@@ -120,12 +137,11 @@
 		1A99A09C2344EF5B002D5DA1 /* UserList */ = {
 			isa = PBXGroup;
 			children = (
+				1A7DF43423485357007BF231 /* Services */,
+				1A7DF4332348534F007BF231 /* Model */,
 				1A8728ED2343B0910090B824 /* UserListViewController.swift */,
-				1A99A0A12344F3CC002D5DA1 /* GithubUser.swift */,
 				1A99A0A32344F599002D5DA1 /* UserListItemCell.swift */,
 				1A99A0A72344F941002D5DA1 /* UserListViewPresenter.swift */,
-				1A99A0A92344FAB6002D5DA1 /* GithubUserFetchService.swift */,
-				1AD1060D23477E950058B096 /* GithubUserViewModel.swift */,
 			);
 			path = UserList;
 			sourceTree = "<group>";
@@ -309,7 +325,7 @@
 				1A99A0AA2344FAB6002D5DA1 /* GithubUserFetchService.swift in Sources */,
 				1A8728EC2343B0910090B824 /* AppDelegate.swift in Sources */,
 				1A99A0A82344F941002D5DA1 /* UserListViewPresenter.swift in Sources */,
-				1AD1060E23477E950058B096 /* GithubUserViewModel.swift in Sources */,
+				1AD1060E23477E950058B096 /* UserListItemCellModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

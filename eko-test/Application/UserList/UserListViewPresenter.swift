@@ -42,6 +42,8 @@ class UserListViewPresenter {
     var state = UserListViewState.empty
     var userList = [GithubUser]()
     
+    var favouriteService = FavouriteUserStorageService()
+    
     init(apiService: UserFetchService) {
         self.userListApiService = apiService
         self.setupUserFetchingCompletionHandler()
@@ -127,11 +129,24 @@ class UserListViewPresenter {
         
         let userInfo = userList[indexPath.row]
         
-        let viewModel = UserListItemCellModel(model: userInfo)
+        let isFavourite = favouriteService.getFavouriteStatus(user: userInfo)
+        
+        var viewModel = UserListItemCellModel(model: userInfo)
+        viewModel.isFavourite = isFavourite
+        
         return viewModel
     }
     
-    func displayUserInformation(at indexPath: IndexPath) {
+    func toggleUserFavouriteStatus(currentStatus: Bool, indexPath: IndexPath) {
+        
+        let user = userList[indexPath.row]
+        let favStatus = !currentStatus
+        
+        self.favouriteService.setFavouriteStatus(user: user, status: favStatus)
+        self.delegate?.updateFavouriteStatus(at: indexPath)
+    }
+    
+    func displayGithubProfileOfUser(at indexPath: IndexPath) {
         
         let userInfo = userList[indexPath.row]
         let githubUrl = userInfo.htmlUrl
@@ -148,10 +163,5 @@ class UserListViewPresenter {
         default:
             return false
         }
-    }
-    
-    func toggleUserFavouriteStatus(at indexPath: IndexPath) {
-        
-        self.delegate?.updateFavouriteStatus(at: indexPath)
     }
 }

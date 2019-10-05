@@ -61,7 +61,7 @@ class GithubUserFetchService: UserFetchService {
             self.processPaginationLink(linkHeader: linkHeader)
             
             Log.add(info: "Pagination Availability: \(self.isPaginationAvailable)")
-            Log.add(info: "Pagination Url: \(self.paginationUrl)")
+            Log.add(info: "Pagination Url: \(String(describing: self.paginationUrl))")
             
             // Handle success response
             self.completionHandler?(users, nil)
@@ -100,3 +100,33 @@ class GithubUserFetchService: UserFetchService {
 }
 
 
+class FavouriteUserStorageService {
+    
+    var storageKey = "favourite_user_list"
+    var storage: UserDefaults
+    
+    init() {
+        storage = UserDefaults.standard
+    }
+    
+    func setFavouriteStatus(user: GithubUser, status: Bool) {
+        
+        guard let id = user.id else { return }
+        
+        var favDict = storage.dictionary(forKey: storageKey) ?? [:]
+        favDict["\(id)"] = status
+        
+        storage.set(favDict, forKey: storageKey)
+        storage.synchronize()
+    }
+    
+    func getFavouriteStatus(user: GithubUser) -> Bool {
+        
+        guard let id = user.id else { return false }
+        
+        let savedDict = storage.dictionary(forKey: storageKey) ?? [:]
+        let isFavourite = savedDict["\(id)"] as? Bool ?? false
+        
+        return isFavourite
+    }
+}
